@@ -22,6 +22,7 @@ jobs:
           - "3.10"
           - "3.11"
           - "3.12"
+          - "3.13"
         os:
           - ubuntu-latest
           - windows-latest
@@ -74,14 +75,14 @@ jobs:
 
       # Do a dry run of PSR
       - name: Test release
-        uses: python-semantic-release/python-semantic-release@v9.17.0
+        uses: python-semantic-release/python-semantic-release@v9
         if: ${{ github.ref_name != 'main' && !startsWith(github.ref_name, 'stable/') }}
         with:
           root_options: --noop
 
       # On main/stable branch: actual PSR + upload to PyPI & GitHub
       - name: Release
-        uses: python-semantic-release/python-semantic-release@v9.17.0
+        uses: python-semantic-release/python-semantic-release@v9
         id: release
         if: ${{ github.ref_name == 'main' || startsWith(github.ref_name, 'stable/') }}
         with:
@@ -97,7 +98,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         if: steps.release.outputs.released == 'true'
       - name: Publish package distributions to GitHub Releases
-        uses: python-semantic-release/publish-action@v9.17.0
+        uses: python-semantic-release/publish-action@v9
         if: steps.release.outputs.released == 'true'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
